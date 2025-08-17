@@ -73,7 +73,58 @@ body {
     background: #111;
 }
 
+/* 🌞 Light mode button */
+body:not(.dark-mode) #theme-toggle {
+    background: #222;
+    color: #f7f7f7;
+}
 
+body:not(.dark-mode) #theme-toggle:hover {
+    background: #444;
+}
+
+/* 🌙 Dark Mode */
+body.dark-mode {
+    background: #111; /* page background */
+    color: #eee;
+}
+
+body.dark-mode .clock-label {
+    color: #eee;
+}
+
+body.dark-mode .analog_clock {
+    background: radial-gradient(circle at 60% 40%, #222 60%, #000 100%);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6), 0 0 0 2px #333 inset;
+}
+
+body.dark-mode .hand {
+    background: #eee; /* lighter hands */
+}
+
+body.dark-mode .analog_center {
+    background: #eee;
+}
+
+#theme-toggle {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 9999px; /* fully rounded pill */
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* 🌙 Dark mode button */
+body.dark-mode #theme-toggle {
+    background: #eee;
+    color: #111;
+}
+
+body.dark-mode #theme-toggle:hover {
+    background: #ddd;
+}
 
 
 

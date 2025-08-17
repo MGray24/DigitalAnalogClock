@@ -136,3 +136,16 @@ function updateHandsAndTime() {
 let currentMinute = new Date().getMinutes();
 
 setInterval(updateHandsAndTime, 1);
+
+const toggleButton = document.getElementById("theme-toggle");
+
+toggleButton.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+
+  // Update button text/icon
+  if (document.body.classList.contains("dark-mode")) {
+    toggleButton.textContent = "☀️ Light Mode";
+  } else {
+    toggleButton.textContent = "🌙 Dark Mode";
+  }
+});
