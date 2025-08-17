@@ -1,14 +1,14 @@
-// Example structure for minute hands (expand as needed)
+// each minute hands angle for each digit
 const minuteAngleMap = {
     0: { '0': 90, '1': 215, '2': 90, '3': 90, '4': 180, '5': 90, '6': 90, '7': 90, '8': 90, '9': 90 },
     1: { '0': 180, '1': 180, '2': 180, '3': 180, '4': 180, '5': 270, '6': 270, '7': 180, '8': 180, '9': 180 },
     2: { '0': 0, '1': 215, '2': 90, '3': 90, '4': 0, '5': 0, '6': 0, '7': 215, '8': 90, '9': 0 },
-    3: { '0': 0, '1': 0, '2': 0, '3': 0, '4': 0, '5': 180, '6': 180, '7': 180, '8': 180, '9': 180 },
+    3: { '0': 0, '1': 0, '2': 0, '3': 0, '4': 0, '5': 180, '6': 180, '7': 180, '8': 180, '9': 0 },
     4: { '0': 0, '1': 215, '2': 0, '3': 90, '4': 215, '5': 90, '6': 0, '7': 215, '8': 0, '9': 90 },
     5: { '0': 0, '1': 0, '2': 270, '3': 0, '4': 0, '5': 0, '6': 0, '7': 0, '8': 0, '9': 0 }
 };
 
-// Example structure for hour hands
+// each hour hands angle for each digit
 const hourAngleMap = {
     0: { '0': 180, '1': 215, '2': 90, '3': 90, '4': 180, '5': 180, '6': 180, '7': 90, '8': 180, '9': 180 },
     1: { '0': 270, '1': 180, '2': 270, '3': 270, '4': 180, '5': 270, '6': 270, '7': 270, '8': 270, '9': 270 },
@@ -62,8 +62,24 @@ clocks.forEach(clock => {
     handStates.push({
         element: minuteHand,
         prevAngle: 0,
-        nextAngle: 90
+        nextAngle: 0
     });
+});
+
+//SETS INITIAL POSITIONS ON PAGE LOAD
+const now = new Date();
+const hours = now.getHours().toString().padStart(2, '0');
+const minutes = now.getMinutes().toString().padStart(2, '0');
+const timeDigits = hours + minutes;
+
+const nextMinuteDate = new Date(now.getTime() + 60000);
+const nextHours = nextMinuteDate.getHours().toString().padStart(2, '0');
+const nextMinutes = nextMinuteDate.getMinutes().toString().padStart(2, '0');
+const nextTimeDigits = nextHours + nextMinutes;
+
+handStates.forEach(hand => {
+    hand.prevAngle = getNextAngle(hand, timeDigits);
+    hand.nextAngle = getNextAngle(hand, nextTimeDigits);
 });
 
 function getNextAngle(hand, timeDigits) {
@@ -83,7 +99,6 @@ function getNextAngle(hand, timeDigits) {
 
 function updateHandsAndTime() {
     const now = new Date();
-    const secondsPast = now.getSeconds();
 
     if (now.getMinutes() !== currentMinute) {
         currentMinute = now.getMinutes();
@@ -95,14 +110,26 @@ function updateHandsAndTime() {
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const timeDigits = hours + minutes; // e.g. "1235"
 
-            hand.nextAngle = getNextAngle(hand, timeDigits);
+            const nextMinuteDate = new Date(now.getTime() + 60000); // add 1 minute
+            const nextHours = nextMinuteDate.getHours().toString().padStart(2, '0');
+            const nextMinutes = nextMinuteDate.getMinutes().toString().padStart(2, '0');
+            const nextTimeDigits = nextHours + nextMinutes;
+            hand.nextAngle = getNextAngle(hand, nextTimeDigits);
         });
         console.log("Minute changed:", currentMinute);
     }
 
-    // Calculate the current angle for each hand based on secondsPast
+    // Calculate the current angle for each hand based on msPast
     handStates.forEach(hand => {
-        const angle = hand.prevAngle + (hand.nextAngle - hand.prevAngle) * (secondsPast / 60);
+        let prev = hand.prevAngle;
+        let next = hand.nextAngle;
+        // Ensure clockwise movement
+        if (next < prev || next == prev) {
+            next += 360;
+        }
+        const msPast = now.getSeconds() * 1000 + now.getMilliseconds();
+        const fraction = msPast / 60000; // 60,000 ms in a minute
+        const angle = prev + (next - prev) * fraction;
         hand.element.style.transform = `rotate(${angle}deg)`;
     });
 }
@@ -110,4 +137,4 @@ function updateHandsAndTime() {
 
 let currentMinute = new Date().getMinutes();
 
-setInterval(updateHandsAndTime, 100);
+setInterval(updateHandsAndTime, 1);
