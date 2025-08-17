@@ -45,6 +45,6 @@
     bottom:50%;
     width: 10px; height: 10px;
     translate: -50% 50%;
-    border-radius: 50%;
+    border-radius: 100%;
     background:#111; border-radius:3px;
 }
