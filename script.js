@@ -88,7 +88,6 @@ function getNextAngle(hand, timeDigits) {
     const clockidx = parseInt(parentId.charAt(parentId.length - 1));
     const digittomake = timeDigits[digitidx]
     if (hand.element.classList.contains('minute')) {
-        console.log(clockidx, digittomake)
         return minuteAngleMap[clockidx][digittomake];
     } else if (hand.element.classList.contains('hour')) {
         return hourAngleMap[clockidx][digittomake];
@@ -116,7 +115,6 @@ function updateHandsAndTime() {
             const nextTimeDigits = nextHours + nextMinutes;
             hand.nextAngle = getNextAngle(hand, nextTimeDigits);
         });
-        console.log("Minute changed:", currentMinute);
     }
 
     // Calculate the current angle for each hand based on msPast
